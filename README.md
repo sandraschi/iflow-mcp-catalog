@@ -1,5 +1,7 @@
 # iflow-mcp-catalog
 
+**Repo:** [github.com/sandraschi/iflow-mcp-catalog](https://github.com/sandraschi/iflow-mcp-catalog)
+
 FastMCP **3.1+** server plus SOTA webapp: pulls a GitHub org’s repos (default [`iflow-mcp`](https://github.com/iflow-mcp)), classifies them for MCP-oriented browsing, sorts by stars, and stores **`data/catalog.json`** plus optional **`reports/catalog_standalone.html`**.
 
 ## Ports (fleet)
@@ -78,3 +80,10 @@ This repo is an **optional index satellite** for research/demos. How it plugs in
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Remote
+
+```text
+git remote add origin https://github.com/sandraschi/iflow-mcp-catalog.git
+git push -u origin main
+```
