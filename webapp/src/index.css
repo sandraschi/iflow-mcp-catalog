@@ -1,0 +1,33 @@
+:root {
+  --bg: hsl(220 16% 8%);
+  --panel: hsl(220 14% 12% / 0.88);
+  --text: hsl(210 20% 92%);
+  --muted: hsl(215 12% 58%);
+  --accent: hsl(200 85% 55%);
+  --border: hsl(220 12% 22%);
+  --glass: blur(14px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}

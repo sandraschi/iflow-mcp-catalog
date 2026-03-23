@@ -1,0 +1,164 @@
+"""FastMCP 3.1 server: catalog refresh and snapshot tools."""
+
+from __future__ import annotations
+
+import json
+import logging
+import time
+from pathlib import Path
+from typing import Any
+
+from fastmcp import FastMCP
+
+from .catalog_service import (
+    build_catalog_payload,
+    export_standalone_report,
+    write_catalog_json,
+)
+from .collector.github_org import fetch_org_repos
+from .paths import catalog_json_path
+
+logger = logging.getLogger(__name__)
+
+mcp = FastMCP(
+    "iflow-mcp-catalog",
+    instructions=(
+        "Indexes GitHub orgs (default: iflow-mcp) into a star-sorted, categorized MCP-oriented "
+        "catalog. Refresh writes data/catalog.json and reports/catalog_standalone.html. "
+        "Requires GITHUB_TOKEN for large orgs."
+    ),
+)
+
+
+def _read_catalog_if_exists() -> dict[str, Any] | None:
+    p = catalog_json_path()
+    if not p.is_file():
+        return None
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        logger.warning("Corrupt catalog.json: %s", e)
+        return None
+
+
+@mcp.tool()
+async def iflow_catalog_refresh(
+    org: str = "iflow-mcp",
+    max_pages: int | None = None,
+    write_html: bool = True,
+) -> dict[str, Any]:
+    """IFLOW_CATALOG_REFRESH — Fetch org repos via GitHub API, classify, persist JSON (+ optional HTML).
+
+    PORTMANTEAU PATTERN RATIONALE: Single tool to refresh the entire local database from GitHub
+    without a separate CLI step, so agents can update the catalog on demand.
+
+    Args:
+        org: GitHub organization login (default iflow-mcp).
+        max_pages: Cap pagination for testing (None = all pages).
+        write_html: Also emit reports/catalog_standalone.html.
+
+    Returns:
+        Success payload with paths, counts, and rate-limit hints; or structured error.
+    """
+    t0 = time.perf_counter()
+    try:
+        raw, diag = await fetch_org_repos(org, max_pages=max_pages)
+        payload = build_catalog_payload(org, raw, diag)
+        json_path = write_catalog_json(payload)
+        html_path: str | None = None
+        if write_html:
+            html_path = export_standalone_report(payload)
+        elapsed_ms = int((time.perf_counter() - t0) * 1000)
+        return {
+            "success": True,
+            "result": {
+                "org": org,
+                "repo_count": payload["meta"]["repo_count"],
+                "catalog_json": json_path,
+                "standalone_html": html_path,
+                "github_rate_limit_remaining": diag.get("rate_limit_remaining"),
+                "pages_fetched": diag.get("pages_fetched"),
+            },
+            "execution_time_ms": elapsed_ms,
+            "recommendations": [
+                "Open webapp http://127.0.0.1:10808 after start.ps1 for live filters.",
+                "Set GITHUB_TOKEN if you hit rate limits or incomplete fetches.",
+            ],
+        }
+    except Exception as e:
+        logger.exception("refresh failed")
+        return {
+            "success": False,
+            "error": str(e),
+            "error_type": type(e).__name__,
+            "recovery_options": [
+                "Export GITHUB_TOKEN with repo read scope (public data only is fine).",
+                "Try max_pages=1 to validate connectivity.",
+            ],
+        }
+
+
+@mcp.tool()
+async def iflow_catalog_snapshot(
+    limit: int = 50,
+    category: str | None = None,
+    min_mcp_score: int = 0,
+) -> dict[str, Any]:
+    """IFLOW_CATALOG_SNAPSHOT — Return top repos from the last local refresh (no network).
+
+    PORTMANTEAU PATTERN RATIONALE: Read-only inspection for agents without burning API quota.
+
+    Args:
+        limit: Max rows (sorted by stars desc).
+        category: Filter by classifier bucket, or None for all.
+        min_mcp_score: Minimum mcp_likelihood (0–100).
+
+    Returns:
+        Rows plus meta; error if no catalog on disk.
+    """
+    data = _read_catalog_if_exists()
+    if not data:
+        return {
+            "success": False,
+            "error": "No catalog.json; run iflow_catalog_refresh first.",
+            "error_type": "missing_catalog",
+            "recovery_options": ["Call iflow_catalog_refresh", "Run: iflow-mcp-catalog refresh"],
+        }
+    repos: list[dict[str, Any]] = list(data.get("repos") or [])
+    if category:
+        repos = [r for r in repos if r.get("category") == category]
+    repos = [r for r in repos if int(r.get("mcp_likelihood") or 0) >= min_mcp_score]
+    repos.sort(key=lambda r: (-int(r.get("stars") or 0), r.get("full_name") or ""))
+    slim = [
+        {
+            "full_name": r.get("full_name"),
+            "stars": r.get("stars"),
+            "category": r.get("category"),
+            "mcp_likelihood": r.get("mcp_likelihood"),
+            "html_url": r.get("html_url"),
+            "fork": r.get("fork"),
+            "parent_full_name": r.get("parent_full_name"),
+        }
+        for r in repos[:limit]
+    ]
+    return {
+        "success": True,
+        "result": {"meta": data.get("meta"), "repos": slim, "returned": len(slim)},
+        "recommendations": ["Use category filter to browse buckets from by_category in JSON."],
+    }
+
+
+@mcp.tool()
+async def iflow_catalog_paths() -> dict[str, Any]:
+    """IFLOW_CATALOG_PATHS — Resolve on-disk locations for JSON, HTML, and repo root."""
+    root = Path(__file__).resolve().parent.parent.parent
+    return {
+        "success": True,
+        "result": {
+            "repo_root": str(root),
+            "catalog_json": str(catalog_json_path()),
+            "standalone_html": str(root / "reports" / "catalog_standalone.html"),
+            "webapp_dev": "http://127.0.0.1:10808",
+            "api_backend": "http://127.0.0.1:10809",
+        },
+    }
