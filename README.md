@@ -77,4 +77,4 @@ This repo is an **optional index satellite** for research/demos. How it plugs in
 
 ## License
 
-MIT (align with your fleet policy).
+MIT — see [LICENSE](LICENSE).
