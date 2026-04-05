@@ -2,7 +2,7 @@
 
 **Repo:** [github.com/sandraschi/iflow-mcp-catalog](https://github.com/sandraschi/iflow-mcp-catalog)
 
-FastMCP **3.1+** server plus SOTA webapp: pulls a GitHub org’s repos (default [`iflow-mcp`](https://github.com/iflow-mcp)), classifies them for MCP-oriented browsing, sorts by stars, and stores **`data/catalog.json`** plus optional **`reports/catalog_standalone.html`**.
+FastMCP **3.1+** server plus SOTA webapp: pulls a GitHub orgs repos (default [`iflow-mcp`](https://github.com/iflow-mcp)), classifies them for MCP-oriented browsing, sorts by stars, and stores **`data/catalog.json`** plus optional **`reports/catalog_standalone.html`**.
 
 ## Ports (fleet)
 
@@ -45,7 +45,7 @@ Test with a page cap:
 .\start.ps1
 ```
 
-Opens `http://127.0.0.1:10808/` (Vite proxies `/api` → `10809`). If `catalog.json` is missing, the UI tells you to run `refresh`.
+Opens `http://127.0.0.1:10808/` (Vite proxies `/api`  `10809`). If `catalog.json` is missing, the UI tells you to run `refresh`.
 
 **Single-file report** (no server): open `reports/catalog_standalone.html` after a refresh with HTML enabled.
 
@@ -79,7 +79,7 @@ This repo is an **optional index satellite** for research/demos. How it plugs in
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT  see [LICENSE](LICENSE).
 
 ## Remote
 
