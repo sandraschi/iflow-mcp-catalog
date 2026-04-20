@@ -1,5 +1,7 @@
 # iflow-mcp-catalog
 
+[![FastMCP Version](https://img.shields.io/badge/FastMCP-3.1.0-blue?style=flat-square&logo=python&logoColor=white)](https://github.com/sandraschi/fastmcp) [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff) [![Linted with Biome](https://img.shields.io/badge/Linted_with-Biome-60a5fa?style=flat-square&logo=biome&logoColor=white)](https://biomejs.dev/) [![Built with Just](https://img.shields.io/badge/Built_with-Just-000000?style=flat-square&logo=gnu-bash&logoColor=white)](https://github.com/casey/just)
+
 **Repo:** [github.com/sandraschi/iflow-mcp-catalog](https://github.com/sandraschi/iflow-mcp-catalog)
 
 FastMCP **3.1+** server plus SOTA webapp: pulls a GitHub orgs repos (default [`iflow-mcp`](https://github.com/iflow-mcp)), classifies them for MCP-oriented browsing, sorts by stars, and stores **`data/catalog.json`** plus optional **`reports/catalog_standalone.html`**.
@@ -76,6 +78,17 @@ This repo is an **optional index satellite** for research/demos. How it plugs in
 
 - Classification is **heuristic** (name/topics/description), not ML.
 - GitHub may omit `parent` on some list payloads; fork source can be null until GitHub fills it.
+
+
+## 🛡️ Industrial Quality Stack
+
+This project adheres to **SOTA 14.1** industrial standards for high-fidelity agentic orchestration:
+
+- **Python (Core)**: [Ruff](https://astral.sh/ruff) for linting and formatting. Zero-tolerance for `print` statements in core handlers (`T201`).
+- **Webapp (UI)**: [Biome](https://biomejs.dev/) for sub-millisecond linting. Strict `noConsoleLog` enforcement.
+- **Protocol Compliance**: Hardened `stdout/stderr` isolation to ensure crash-resistant JSON-RPC communication.
+- **Automation**: [Justfile](./justfile) recipes for all fleet operations (`just lint`, `just fix`, `just dev`).
+- **Security**: Automated audits via `bandit` and `safety`.
 
 ## License
 

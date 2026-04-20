@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "iflow-mcp-catalog"
 version = "0.1.0"
-description = "FastMCP 3.1 catalog: GitHub org MCP fork index (iflow-mcp) with SOTA webapp"
+description = "FastMCP 3.1.0 catalog: GitHub org MCP fork index (iflow-mcp) with SOTA webapp"
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [{ name = "sandraschi", email = "sandra@sandraschi.dev" }]
