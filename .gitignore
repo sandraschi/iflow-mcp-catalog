@@ -13,3 +13,5 @@ data/catalog.json
 reports/catalog_standalone.html
 .env
 *.local
+
+_dashboard/
