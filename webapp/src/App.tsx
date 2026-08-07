@@ -1,6 +1,8 @@
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";
 
+const API_BASE = "http://127.0.0.1:10809";
+
 type Repo = {
   full_name: string | null;
   html_url: string | null;
@@ -33,7 +35,7 @@ export default function App() {
   const [sortDir, setSortDir] = useState<-1 | 1>(-1);
 
   useEffect(() => {
-    fetch("/api/catalog")
+    fetch(API_BASE + "/api/catalog")
       .then((r) => {
         if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
         return r.json();
