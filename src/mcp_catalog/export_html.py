@@ -15,7 +15,7 @@ def write_standalone_html(path: Path, payload: dict[str, Any]) -> None:
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iflow-mcp-catalog — {payload.get("meta", {}).get("org", "org")}</title>
+  <title>iflow-mcp-catalog - {payload.get("meta", {}).get("org", "org")}</title>
   <style>
     :root {{
       --bg: hsl(220 16% 8%);
@@ -157,7 +157,7 @@ def write_standalone_html(path: Path, payload: dict[str, Any]) -> None:
             ${{r.parent_full_name ? `<div class="sub" style="color:var(--muted);font-size:0.8rem">fork of ${{r.parent_full_name}}</div>` : ''}}</td>
           <td><span class="pill">${{r.category}}</span></td>
           <td class="num">${{r.mcp_likelihood}}</td>
-          <td>${{r.language || '—'}}</td>
+          <td>${{r.language || '-'}}</td>
           <td>${{r.fork ? 'yes' : ''}}</td>
           <td>${{(r.pushed_at || '').slice(0,10)}}</td>`;
         tb.appendChild(tr);

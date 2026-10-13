@@ -127,7 +127,7 @@ def mcp_likelihood_score(
     description: str | None,
     topics: list[str],
 ) -> int:
-    """0–100 rough score: how likely this repo is MCP-related."""
+    """0-100 rough score: how likely this repo is MCP-related."""
     score = 0
     low = name.lower()
     if "mcp" in low:

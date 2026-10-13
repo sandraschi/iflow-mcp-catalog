@@ -49,7 +49,7 @@ async def fetch_org_repos(
 ) -> tuple[list[dict[str, Any]], dict[str, str | int | None]]:
     """Fetch all public repos for a GitHub org or personal account.
 
-    Auto-detects account type — pass either an org name (e.g. 'iflow-mcp')
+    Auto-detects account type - pass either an org name (e.g. 'iflow-mcp')
     or a personal account name (e.g. 'sandraschi') and the right API endpoint
     is selected automatically.
 
@@ -77,15 +77,11 @@ async def fetch_org_repos(
         logger.info("Resolved '%s' as %s", org, account_type)
 
         if account_type == "Organization":
-            base = (
-                f"https://api.github.com/orgs/{org}/repos"
-                f"?per_page={per_page}&type=all&sort=updated&direction=desc"
-            )
+            base = f"https://api.github.com/orgs/{org}/repos?per_page={per_page}&type=all&sort=updated&direction=desc"
         else:
             # User accounts: type=owner excludes repos the user merely has access to
             base = (
-                f"https://api.github.com/users/{org}/repos"
-                f"?per_page={per_page}&type=owner&sort=updated&direction=desc"
+                f"https://api.github.com/users/{org}/repos?per_page={per_page}&type=owner&sort=updated&direction=desc"
             )
 
         url: str | None = base

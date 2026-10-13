@@ -36,7 +36,7 @@ async def get_catalog() -> JSONResponse:
     if not p.is_file():
         raise HTTPException(
             status_code=404,
-            detail="catalog.json missing — run iflow-mcp-catalog refresh or MCP iflow_catalog_refresh",
+            detail="catalog.json missing - run iflow-mcp-catalog refresh or MCP iflow_catalog_refresh",
         )
     try:
         data = json.loads(p.read_text(encoding="utf-8"))
