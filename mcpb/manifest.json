@@ -1,0 +1,22 @@
+{
+  "manifest_version": "0.2",
+  "name": "iflow-mcp-catalog",
+  "version": "0.1.0",
+  "description": "FastMCP 3.1.0 catalog: GitHub org MCP fork index (iflow-mcp) with SOTA webapp",
+  "author": { "name": "sandraschi" },
+  "server": {
+    "type": "python",
+    "entry_point": "src/iflow_mcp_catalog/main.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": ["run","--directory","${PWD}","python","-m","iflow_mcp_catalog"],
+      "env": {
+        "PYTHONPATH": "${PWD}/src",
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  },
+  "tools": [
+    { "name": "iflow_catalog_refresh", "description": "iflow_catalog_refresh" }
+  ]
+}
