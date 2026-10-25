@@ -2,8 +2,8 @@
 # Edit ports/backend target here - start.ps1 is fleet-standard.
 @{
     Name         = 'iflow-mcp-catalog'
-    BackendPort  = 0
-    FrontendPort = 0
+    BackendPort  = 10809
+    FrontendPort = 10808
     HealthPath   = '/health'
     WebRoot      = 'webapp'
     Backend = @{
