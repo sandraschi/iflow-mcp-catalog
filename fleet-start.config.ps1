@@ -4,12 +4,17 @@
     Name         = 'iflow-mcp-catalog'
     BackendPort  = 10809
     FrontendPort = 10808
-    HealthPath   = '/health'
+    HealthPath   = '/api/health'
     WebRoot      = 'webapp'
     Backend = @{
-        Kind = 'none'
+        Kind          = 'uvicorn'
+        UvicornTarget = 'mcp_catalog.webapp_backend:app'
+        SyncExtras    = @('dev')
+        SyncOnStart   = $true
+        Env           = @{ WEB_PORT = '10809' }
     }
     Frontend = @{
-        Kind = 'none'
+        Kind           = 'vite-npm'
+        PackageManager = 'npm'
     }
 }
